@@ -11,6 +11,10 @@ python:
   manager: pip #pip or conda
   env_name: venv
 
+# single_runs:
+#   - name: HomeTimeActualPython
+#     entrypoint: run.sh
+
 # cron_entries:
 #   - name: HomeTimeActualPython
 #     entrypoint: run.sh

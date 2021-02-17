@@ -9,7 +9,7 @@ if [ "$PYTHON_MANAGER" == "conda" ]; then
 fi
 if [ "$PYTHON_MANAGER" == "pip" ]; then
   # shellcheck disable=SC1091
-  source "/home/{{ instance_user }}/app/{{ project.env_name }}/bin/activate"
+  source "/home/{{ instance_user }}/app/{{ python.env_name }}/bin/activate"
 fi
 
 mkdir -p "/home/{{ instance_user }}/logs/{{ type }}"

@@ -17,6 +17,11 @@
   include_tasks: pip.yml
   when: project.manager == "pip"
 
+- name: Execute Single Runs
+  with_items: "{{ single_runs }}"
+  include_tasks: single-run.yml
+  when: single_runs is defined
+
 - name: Add cron Entries
   with_items: "{{ cron_entries }}"
   include_tasks: cron.yml
