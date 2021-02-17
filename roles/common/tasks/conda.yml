@@ -11,6 +11,7 @@
 - name: Install Conda
   when: is_conda_exist.stdout[0] is undefined
   block:
+    - include_tasks: tasks/push_ssh_key.yml
     - name: Download Conda
       get_url:
         url: https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh
@@ -51,3 +52,4 @@
         path: /opt/conda3/bin
         mode: +x
         recurse: yes
+    - include_tasks: tasks/push_ssh_key.yml
