@@ -37,7 +37,7 @@
 
     - name: Add conda bin to environment.d
       become: True
-      shell: echo 'PATH=/opt/conda3/bin:$PATH' >> /etc/environment
+      shell: echo "PATH=\"/opt/conda3/bin:$PATH\"" > /etc/environment
 
     - name: conda - read permission for all
       become: True
