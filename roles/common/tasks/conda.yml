@@ -1,6 +1,6 @@
 ---
 - name: Check is conda installed
-  shell: command -v conda >/dev/null 2>&1
+  shell: which conda
   register: is_conda_exist
   ignore_errors: yes
 
@@ -9,7 +9,7 @@
     msg: "{{ is_conda_exist }}"
 
 - name: Install Conda
-  when: is_conda_exist.failed is false
+  when: is_conda_exist.stdout[0] is undefined
   block:
     - include_tasks: tasks/push_ssh_key.yml
     - name: Download Conda

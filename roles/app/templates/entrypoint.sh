@@ -6,6 +6,7 @@ PYTHON_MANAGER="{{ python.manager }}"
 if [ "$PYTHON_MANAGER" == "conda" ]; then
   # shellcheck disable=SC1091
   source "/opt/conda3/etc/profile.d/conda.sh"
+  conda activate
 fi
 if [ "$PYTHON_MANAGER" == "pip" ]; then
   # shellcheck disable=SC1091
@@ -21,7 +22,7 @@ function handle_err() {
   MYSELF="$0"   # equals to my script name
   LASTLINE="$1" # argument 1: last line of error occurence
   LASTERR="$2"  # argument 2: error code of last command
-  echo -e "${MYSELF}: line ${LASTLINE}\n ${BASH_COMMAND}\n exit status of last command: ${LASTERR}" \
+  echo -e "${MYSELF}: line ${LASTLINE}\n${BASH_COMMAND}\nexit status of command: ${LASTERR}" \
     >>"/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.error.log"
 }
 
@@ -29,5 +30,6 @@ function handle_err() {
 trap 'handle_err ${LINENO} $?' ERR
 
 rm "/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.log" || true
-cd "/home/{{ instance_user }}/app" && bash -c "{{ entrypoint }}" \
+# shellcheck disable=SC1083
+bash -c "cd "/home/{{ instance_user }}/app" && {{ entrypoint }}" \
   >>"/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.log"
