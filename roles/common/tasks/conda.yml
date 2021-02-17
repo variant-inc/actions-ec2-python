@@ -9,7 +9,7 @@
     msg: "{{ is_conda_exist }}"
 
 - name: Install Conda
-  when: is_conda_exist.stdout[0] is undefined
+  when: is_conda_exist.failed is false
   block:
     - include_tasks: tasks/push_ssh_key.yml
     - name: Download Conda
