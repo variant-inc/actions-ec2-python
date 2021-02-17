@@ -20,6 +20,12 @@
 - name: "Single Run for {{ item.name }}"
   become_user: "{{ instance_user }}"
   shell: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
+  when: item.background|default(false)|bool == false
+
+- name: "Single Run for {{ item.name }} in Background"
+  become_user: "{{ instance_user }}"
+  shell: "nohup /home/{{ instance_user }}/runs/{{ item.name }}.sh >/dev/null 2>&1 &"
+  when: item.background|default(false)|bool == true
 
 - name: "Cleanup Run for {{ item.name }}"
   become_user: "{{ instance_user }}"
