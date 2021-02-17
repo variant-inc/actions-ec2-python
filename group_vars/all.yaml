@@ -24,7 +24,7 @@ python:
 # backups:
 #   - name: data
 #     bucket_name: home-time
-#     bucket_folder: "/"
+#     bucket_folder: ""
 #     # dir relative to home dir. For example: if dir is hello, the absolute dir is /home/ubuntu/hello
 #     dir: "data"
 # service_entries:

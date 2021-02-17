@@ -30,6 +30,7 @@
   vars:
     dir: "/home/{{ instance_user }}/{{ item.dir }}"
     bucket_name: "{{ item.bucket_name }}"
+    bucket_folder: "{{ item.bucket_folder }}"
   ansible.builtin.template:
     src: backup.sh
     dest: "/home/{{ instance_user }}/service/{{ item.name }}-backup.sh"
