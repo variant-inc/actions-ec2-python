@@ -9,7 +9,7 @@ instance_user: ubuntu
 
 python:
   manager: pip #pip or conda
-  env: app
+  env_name: venv
 
 # cron_entries:
 #   - name: HomeTimeActualPython

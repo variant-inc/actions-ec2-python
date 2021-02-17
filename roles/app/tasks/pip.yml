@@ -2,12 +2,12 @@
 - name: Install pip Requirements
   block:
     - name: Create virtual env
-      shell: python3 -m venv venv
+      shell: "python3 -m venv {{ project.env_name }}"
       become_user: "{{ instance_user }}"
       chdir: "/home/{{ instance_user }}/app"
       when: project.manager == "pip"
 
     - name: Install requirements
-      shell: source venv/bin/activate && pip3 install wheel && pip3 install -r requirements.txt
+      shell: "source {{ project.env_name }}/bin/activate && pip3 install wheel && pip3 install -r requirements.txt"
       become_user: "{{ instance_user }}"
       chdir: "/home/{{ instance_user }}/app"

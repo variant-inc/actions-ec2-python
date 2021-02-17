@@ -23,5 +23,5 @@
 
 - name: Remove Virtual Env folder
   file:
-    path: /home/{{ instance_user }}/app/venv
+    path: "/home/{{ instance_user }}/app/{{ project.env_name }}"
     state: absent
