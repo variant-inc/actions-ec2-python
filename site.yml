@@ -1,0 +1,26 @@
+---
+- hosts: all
+  gather_facts: no
+  vars_files:
+    - group_vars/values.yaml
+  pre_tasks:
+    - include_tasks: tasks/push_ssh_key.yml
+
+- hosts: all
+  vars_files:
+    - group_vars/values.yaml
+  vars:
+    ansible_host_key_checking: false
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+    ansible_become: yes
+    ansible_ssh_user: ubuntu
+  pre_tasks:
+    - include_tasks: tasks/cleanup.yml
+    - import_role:
+        name: common
+    # - include_tasks: tasks/push_ssh_key.yml
+    # - import_role:
+    #     name: td-agent
+    # - include_tasks: tasks/push_ssh_key.yml
+  # roles:
+  #   - app

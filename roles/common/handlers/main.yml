@@ -1,0 +1,6 @@
+---
+- name: Purge Apt Lists
+  file:
+    path: /var/lib/apt/lists/*
+    state: absent
+    recurse: yes

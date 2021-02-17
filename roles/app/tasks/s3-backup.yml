@@ -1,0 +1,65 @@
+---
+- name: Create a S3 bucket
+  amazon.aws.s3_bucket:
+    name: "{{ item.bucket_name }}"
+    state: present
+    delete_public_access: yes
+    encryption: aws:kms
+    region: "{{ placement.region }}"
+    tags:
+      owner: data-science
+      purpose: "Backups for {{ git_repo }}"
+      app: "{{ git_repo }}"
+
+- name: Create a directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/{{ item.dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Create service directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/service"
+    state: directory
+    mode: "0755"
+
+- name: "Backup Script {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    dir: "/home/{{ instance_user }}/{{ item.dir }}"
+    bucket_name: "{{ item.bucket_name }}"
+  ansible.builtin.template:
+    src: backup.sh
+    dest: "/home/{{ instance_user }}/service/{{ item.name }}-backup.sh"
+    backup: yes
+    mode: "0755"
+
+- name: "Create backup entrypoint for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    type: service
+    name: "{{ item.name }}"
+    entrypoint: "/home/{{ instance_user }}/service/{{ item.name }}-backup.sh"
+  ansible.builtin.template:
+    src: entrypoint.sh
+    dest: "/home/{{ instance_user }}/service/{{ item.name }}-backup-entrypoint.sh"
+    mode: "0755"
+
+- name: "Backup Service {{ item.name }}"
+  vars:
+    name: "{{ item.name }}-backup"
+    user: "{{ instance_user }}"
+    entrypoint: "/home/{{ instance_user }}/service/{{ item.name }}-backup-entrypoint.sh"
+  ansible.builtin.template:
+    src: app.service.conf
+    dest: "/etc/systemd/system/{{ item.name }}-backup.service"
+    backup: no
+
+- name: "Enable backup service {{ item.name }}-backup"
+  ansible.builtin.systemd:
+    name: "{{ item.name }}-backup"
+    enabled: yes
+    state: started
+  notify: Reload systemd

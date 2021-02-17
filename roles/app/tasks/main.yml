@@ -1,0 +1,33 @@
+---
+- name: Git Clone
+  ansible.builtin.git:
+    repo: "https://{{ git.username | urlencode }}:{{ git.secret_token | urlencode }}@github.com/{{ git_owner }}/{{ git_repo }}.git"
+    dest: "/home/{{ instance_user }}/app"
+    version: "{{ git.commit_sha }}"
+    umask: "022"
+  become_user: "{{ instance_user }}"
+
+- name: Conda Create Env
+  shell: "conda env create -f environment.yml -n {{ project.env }}"
+  become_user: "{{ instance_user }}"
+  chdir: "/home/{{ instance_user }}/app"
+  when: project.manager == "conda"
+
+- name: Install pip Requirements
+  include_tasks: pip.yml
+  when: project.manager == "pip"
+
+- name: Add cron Entries
+  with_items: "{{ cron_entries }}"
+  include_tasks: cron.yml
+  when: cron_entries is defined
+
+- name: Add App Services
+  with_items: "{{ service_entries }}"
+  include_tasks: service.yml
+  when: service_entries is defined
+
+- name: Add Backup Services
+  with_items: "{{ backups }}"
+  include_tasks: s3-backup.yml
+  when: backups is defined

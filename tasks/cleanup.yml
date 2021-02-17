@@ -1,0 +1,27 @@
+---
+- name: Kill running cron jobs
+  with_items: "{{ cron_entries }}"
+  shell: "pkill -f {{ item.entrypoint }}"
+  ignore_errors: True
+  when: cron_entries is defined
+
+- name: Kill running services
+  with_items: "{{ service_entries }}"
+  ansible.builtin.systemd:
+    name: "{{ item.name }}"
+    state: stopped
+  ignore_errors: True
+  when: service_entries is defined
+
+- name: Kill running backups
+  with_items: "{{ backups }}"
+  ansible.builtin.systemd:
+    name: "{{ item.name }}-backup"
+    state: stopped
+  ignore_errors: True
+  when: backups is defined
+
+- name: Remove Virtual Env folder
+  file:
+    path: /home/{{ instance_user }}/app/venv
+    state: absent

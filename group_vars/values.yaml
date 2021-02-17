@@ -1,0 +1,28 @@
+---
+git:
+  url:
+  commit_sha:
+  secret_token:
+  username:
+
+instance_user: ubuntu
+
+python:
+  manager: conda #pip or conda
+  env: app
+
+cron_entries:
+  - name: HomeTimeActualPython
+    entrypoint: run.sh
+    cron: "25 11 * * *"
+    disabled: no
+
+backups:
+  - name: data
+    bucket_name: home-time
+    bucket_folder: "/"
+    # dir relative to home dir. For example: if dir is hello, the absolute dir is /home/ubuntu/hello
+    dir: "data"
+# service_entries:
+# - name: HomeTimeActualPython
+#   entrypoint: run.sh
