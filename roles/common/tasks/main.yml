@@ -19,7 +19,7 @@
 
 - name: Install conda
   include_tasks: conda.yml
-  when: project.manager == "conda"
+  when: python.manager == "conda"
 
 - name: Pip Install Packages
   pip:
