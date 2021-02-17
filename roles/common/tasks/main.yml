@@ -5,8 +5,6 @@
     state: latest
     install_recommends: no
     update_cache: true
-  notify:
-    - Purge Apt Lists
 
 - name: Install Packages
   apt:
@@ -14,8 +12,6 @@
     state: present
     install_recommends: no
     update_cache: true
-  notify:
-    - Purge Apt Lists
 
 - name: Install conda
   include_tasks: conda.yml
