@@ -8,4 +8,4 @@ ce ansible-galaxy collection install amazon.aws
 
 ce pip3 install -U boto3 botocore boto
 
-ce ansible-playbook ./ansible/site.yml -i ./ansible/aws_ec2.yml -v
+ce ansible-playbook ./site.yml -i ./aws_ec2.yml -v
