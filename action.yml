@@ -3,14 +3,16 @@ description: "Allows deploying an application to Octopus"
 inputs:
   vars_file_path:
     description: "Path to file which contains the variables for deployment"
-    default: "values.yaml"
-    required: false
+    required: true
 runs:
   using: "composite"
   steps:
     - shell: bash
       id: setup
+      env:
+        VARS_FILE: ${{ inputs.vars_file_path }}
       working-directory: ${{ github.workspace }}
       run: |
         mkdir -p deploy
         cp -R ${{ github.action_path }}/* ./deploy
+        cp $VARS_FILE ./deploy/group_vars/
