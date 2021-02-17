@@ -8,7 +8,9 @@
   become_user: "{{ instance_user }}"
 
 - name: Conda Create Env
-  shell: "conda env create -f environment.yml -n {{ python.env_name }}"
+  shell: |
+    conda env create -f environment.yml -n {{ python.env_name }} || \
+    conda env update -f environment.yml -n {{ python.env_name }} --prune
   become_user: "{{ instance_user }}"
   args:
     chdir: "/home/{{ instance_user }}/app"
