@@ -1,10 +1,14 @@
 ---
 - hosts: all
   gather_facts: no
+  vars_files:
+    - group_vars/values.yaml
   pre_tasks:
     - include_tasks: tasks/push_ssh_key.yml
 
 - hosts: all
+  vars_files:
+    - group_vars/values.yaml
   vars:
     ansible_host_key_checking: false
     ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
