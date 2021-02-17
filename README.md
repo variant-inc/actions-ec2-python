@@ -1,2 +1,3 @@
-# lazy-ansible-ec2
+# Lazy Ansible EC2 Action
+
 Ansible Playbook for deploying applications to ec2

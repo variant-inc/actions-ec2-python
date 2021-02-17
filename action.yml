@@ -1,0 +1,16 @@
+name: "Ansible Action EC2"
+description: "Allows deploying an application to Octopus"
+inputs:
+  vars_file_path:
+    description: "Path to file which contains the variables for deployment"
+    default: "values.yaml"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: setup
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir -p deploy
+        cp -R ${{ github.action_path }}/* ./deploy
