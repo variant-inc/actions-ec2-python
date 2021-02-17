@@ -2,10 +2,11 @@
 set -ex
 set -u
 
-echo "Setting up watches for {{ dir }}"
+FILE_PATH=$(realpath "{{ dir }}")
+echo "Setting up watches for $FILE_PATH"
 # shellcheck disable=SC2162
 inotifywait -e modify,moved_from,create,delete --timefmt '%d/%m/%y %H:%M' -m --format '%e %T %f %w%f' \
-"{{ dir }}" | while read event date time fname file; do
+"$FILE_PATH" | while read event date time fname file; do
   echo "INFO: Event:${event}: At ${time} on ${date}: file ${fname}"
   if [ "$event" == "CREATE" ] || [ "$event" == "MODIFY" ]; then
     aws s3 cp "$file" "s3://{{ bucket_name }}/{{bucket_folder}}$file"

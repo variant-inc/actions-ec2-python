@@ -28,7 +28,7 @@
 - name: "Backup Script {{ item.name }}"
   become_user: "{{ instance_user }}"
   vars:
-    dir: "/home/{{ instance_user }}/{{ item.dir }}"
+    dir: "{{ item.dir }}"
     bucket_name: "{{ item.bucket_name }}"
     bucket_folder: "{{ item.bucket_folder }}"
   ansible.builtin.template:
