@@ -28,5 +28,5 @@ function handle_err() {
 # trap commands with non-zero exit code
 trap 'handle_err $?' ERR
 
-# shellcheck disable=SC1083
+# shellcheck disable=SC1009,SC1054,SC1056,SC1072,SC1073,SC1083
 cd /home/{{ instance_user }}/{{ clone_dir }} && {{ entrypoint }} >/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.log
