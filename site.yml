@@ -15,6 +15,10 @@
     ansible_become: yes
     ansible_ssh_user: ubuntu
   pre_tasks:
+    - name: Set GitHub Facts
+      set_fact:
+        git_repo: "{{ git.url.split('/')[4] }}"
+        git_owner: "{{ git.url.split('/')[3] }}"
     - include_tasks: tasks/cleanup.yml
     - import_role:
         name: common
