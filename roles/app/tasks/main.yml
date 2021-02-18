@@ -10,6 +10,13 @@
 
 - include_tasks: tasks/push_ssh_key.yml
 
+- name: Copy file with owner and permissions
+  become_user: "{{ instance_user }}"
+  ansible.builtin.copy:
+    src: ".octopus"
+    dest: "/home/{{ instance_user }}/{{ clone_dir }}"
+    mode: '0755'
+
 - name: Conda Create Env
   shell: |
     conda env create -f environment.yml -n {{ python.env_name }} --force

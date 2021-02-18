@@ -16,3 +16,4 @@ runs:
         mkdir -p deploy
         cp -R ${{ github.action_path }}/* ./deploy
         cp $VARS_FILE ./deploy/group_vars/values.yaml
+        cp -R ./.octopus ./deploy/
