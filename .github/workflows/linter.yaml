@@ -18,7 +18,4 @@ jobs:
         uses: github/super-linter@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
-          VALIDATE_KUBERNETES_KUBEVAL: false
-          VALIDATE_PYTHON_BLACK: false
-          VALIDATE_PYTHON_ISORT: false
+          FILTER_REGEX_EXCLUDE: ".*entrypoint.*"
