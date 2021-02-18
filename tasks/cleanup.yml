@@ -23,5 +23,5 @@
 
 - name: Remove Virtual Env folder
   file:
-    path: "/home/{{ instance_user }}/app/{{ python.env_name }}"
+    path: "/home/{{ instance_user }}/{{ clone_dir }}/{{ python.env_name }}"
     state: absent

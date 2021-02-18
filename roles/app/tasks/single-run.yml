@@ -1,4 +1,5 @@
 ---
+- include_tasks: tasks/push_ssh_key.yml
 - name: Create a directory if it does not exist
   become_user: "{{ instance_user }}"
   ansible.builtin.file:
@@ -26,9 +27,10 @@
   become_user: "{{ instance_user }}"
   shell: "nohup /home/{{ instance_user }}/runs/{{ item.name }}.sh >/dev/null 2>&1 &"
   when: item.background|default(false)|bool == true
+- include_tasks: tasks/push_ssh_key.yml
 
-- name: "Cleanup Run for {{ item.name }}"
-  become_user: "{{ instance_user }}"
-  file:
-    path: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
-    state: absent
+# - name: "Cleanup Run for {{ item.name }}"
+#   become_user: "{{ instance_user }}"
+#   file:
+#     path: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
+#     state: absent

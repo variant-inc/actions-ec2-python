@@ -5,11 +5,11 @@
       shell: "python3 -m venv {{ python.env_name }}"
       become_user: "{{ instance_user }}"
       args:
-        chdir: "/home/{{ instance_user }}/app"
+        chdir: "/home/{{ instance_user }}/{{ clone_dir }}"
       when: python.manager == "pip"
 
     - name: Install requirements
       shell: "source {{ python.env_name }}/bin/activate && pip3 install wheel && pip3 install -r requirements.txt"
       become_user: "{{ instance_user }}"
       args:
-        chdir: "/home/{{ instance_user }}/app"
+        chdir: "/home/{{ instance_user }}/{{ clone_dir }}"

@@ -17,11 +17,9 @@
   include_tasks: conda.yml
   when: python.manager == "conda"
 
+- name: Install awscli
+  include_tasks: awscli.yml
+
 - name: Pip Install Packages
   pip:
     name: "{{ pip_packages }}"
-
-- name: Set GitHub Facts
-  set_fact:
-    git_repo: "{{ git.url.split('/')[4] }}"
-    git_owner: "{{ git.url.split('/')[3] }}"

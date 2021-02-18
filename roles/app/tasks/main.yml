@@ -2,27 +2,36 @@
 - name: Git Clone
   ansible.builtin.git:
     repo: "https://{{ git.username | urlencode }}:{{ git.secret_token | urlencode }}@github.com/{{ git_owner }}/{{ git_repo }}.git"
-    dest: "/home/{{ instance_user }}/app"
+    dest: "/home/{{ instance_user }}/{{ clone_dir }}"
     version: "{{ git.commit_sha }}"
     umask: "022"
+    force: true
   become_user: "{{ instance_user }}"
+
+- include_tasks: tasks/push_ssh_key.yml
 
 - name: Conda Create Env
   shell: |
-    conda env create -f environment.yml -n {{ python.env_name }} -force
+    conda env create -f environment.yml -n {{ python.env_name }} --force
   become_user: "{{ instance_user }}"
   args:
-    chdir: "/home/{{ instance_user }}/app"
+    chdir: "/home/{{ instance_user }}/{{ clone_dir }}"
   when: python.manager == "conda"
+
+- include_tasks: tasks/push_ssh_key.yml
 
 - name: Install pip Requirements
   include_tasks: pip.yml
   when: python.manager == "pip"
 
+- include_tasks: tasks/push_ssh_key.yml
+
 - name: Execute Single Runs
   with_items: "{{ single_runs }}"
   include_tasks: single-run.yml
   when: single_runs is defined
+
+- include_tasks: tasks/push_ssh_key.yml
 
 - name: Add cron Entries
   with_items: "{{ cron_entries }}"

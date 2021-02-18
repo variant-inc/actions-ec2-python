@@ -14,7 +14,7 @@
 - name: Create a directory if it does not exist
   become_user: "{{ instance_user }}"
   ansible.builtin.file:
-    path: "/home/{{ instance_user }}/{{ item.dir }}"
+    path: "$(realpath /home/{{ instance_user }} {{ item.dir }})"
     state: directory
     mode: "0755"
 

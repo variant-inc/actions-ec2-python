@@ -5,6 +5,8 @@ git:
   secret_token:
   username:
 
+clone_dir: app
+
 instance_user: ubuntu
 
 python:

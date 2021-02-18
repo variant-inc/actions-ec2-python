@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -e
 
 PYTHON_MANAGER="{{ python.manager }}"
 if [ "$PYTHON_MANAGER" == "conda" ]; then
@@ -10,7 +10,7 @@ if [ "$PYTHON_MANAGER" == "conda" ]; then
 fi
 if [ "$PYTHON_MANAGER" == "pip" ]; then
   # shellcheck disable=SC1091
-  source "/home/{{ instance_user }}/app/{{ python.env_name }}/bin/activate"
+  source "/home/{{ instance_user }}/{{ clone_dir }}/{{ python.env_name }}/bin/activate"
 fi
 
 mkdir -p "/home/{{ instance_user }}/logs/{{ type }}"
@@ -29,4 +29,4 @@ function handle_err() {
 trap 'handle_err $?' ERR
 
 # shellcheck disable=SC1083
-bash -c "cd /home/{{ instance_user }}/app && ({{ entrypoint }}) >/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.log"
+cd /home/{{ instance_user }}/{{ clone_dir }} && {{ entrypoint }} >/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.log
