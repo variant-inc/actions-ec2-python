@@ -4,9 +4,9 @@
     ansible_become: no
   shell: |
     aws ec2-instance-connect send-ssh-public-key \
-    --instance-id {{ instance_id }} \
-    --instance-os-user {{ instance_user }} \
-    --availability-zone {{ placement.availability_zone }} \
-    --ssh-public-key file://~/.ssh/id_rsa.pub \
-    --region {{ placement.region }}
+      --instance-id {{ instance_id }} \
+      --instance-os-user {{ instance_user }} \
+      --availability-zone {{ placement.availability_zone }} \
+      --ssh-public-key file://~/.ssh/id_rsa.pub \
+      --region {{ placement.region }}
   delegate_to: 127.0.0.1

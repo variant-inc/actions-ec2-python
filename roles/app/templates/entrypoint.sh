@@ -21,7 +21,7 @@ touch "/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.error.log"
 function handle_err() {
   MYSELF="$0"   # equals to my script name
   LASTERR="$1"  # argument 1: error code of last command
-  echo -e "${MYSELF}: line ${LASTLINE}\n${BASH_COMMAND}\nexit status of command: ${LASTERR}" \
+  echo -e "$(date) ${MYSELF}: line ${LASTLINE}\n${BASH_COMMAND}\nexit status of command: ${LASTERR}" \
     >>"/home/{{ instance_user }}/logs/{{ type }}/{{ name }}.error.log"
 }
 
