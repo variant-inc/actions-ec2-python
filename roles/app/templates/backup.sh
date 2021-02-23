@@ -11,6 +11,9 @@ inotifywait -e modify,moved_from,create,delete,moved_to --timefmt '%d/%m/%y %H:%
   if [ "$event" == "CREATE" ] || [ "$event" == "MODIFY" ] || [ "$event" == "MOVED_TO" ]; then
     aws s3 cp "$file" "s3://{{ bucket_name }}/{{bucket_folder}}/$fname"
   fi
+  if [ "$event" == "CREATE,ISDIR" ] || [ "$event" == "MODIFY,ISDIR" ] || [ "$event" == "MOVED_TO,ISDIR" ]; then
+    aws s3 cp "$file" "s3://{{ bucket_name }}/{{bucket_folder}}/$fname" --recursive
+  fi
   # if [ "$event" == "DELETE" ] || [ "$event" == "MOVED_FROM" ]; then
   #   aws s3api delete-object --bucket "{{ bucket_name }}" --key "{{bucket_folder}}$file"
   # fi
