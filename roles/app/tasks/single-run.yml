@@ -7,11 +7,20 @@
     state: directory
     mode: "0755"
 
+- name: "Create script for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    entrypoint: "{{ item.entrypoint }}"
+  ansible.builtin.template:
+    src: run.sh
+    dest: "/home/{{ instance_user }}/scripts/{{ item.name }}-single.sh"
+    mode: "0755"
+
 - name: "Create single entrypoint for {{ item.name }}"
   become_user: "{{ instance_user }}"
   vars:
     type: runs
-    entrypoint: "{{ item.entrypoint }}"
+    entrypoint: "/home/{{ instance_user }}/scripts/{{ item.name }}-single.sh"
     name: "{{ item.name }}"
   ansible.builtin.template:
     src: entrypoint.sh
@@ -28,9 +37,3 @@
   shell: "nohup /home/{{ instance_user }}/runs/{{ item.name }}.sh >/dev/null 2>&1 &"
   when: item.background|default(false)|bool == true
 - include_tasks: tasks/push_ssh_key.yml
-
-# - name: "Cleanup Run for {{ item.name }}"
-#   become_user: "{{ instance_user }}"
-#   file:
-#     path: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
-#     state: absent

@@ -6,11 +6,20 @@
     state: directory
     mode: '0755'
 
+- name: "Create script for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    entrypoint: "{{ item.entrypoint }}"
+  ansible.builtin.template:
+    src: run.sh
+    dest: "/home/{{ instance_user }}/scripts/{{ item.name }}-cron.sh"
+    mode: "0755"
+
 - name: "Create cron entrypoint for {{ item.name }}"
   become_user: "{{ instance_user }}"
   vars:
     type: cron
-    entrypoint: "{{ item.entrypoint }}"
+    entrypoint: "/home/{{ instance_user }}/scripts/{{ item.name }}-cron.sh"
     name: "{{ item.name }}"
   ansible.builtin.template:
     src: entrypoint.sh

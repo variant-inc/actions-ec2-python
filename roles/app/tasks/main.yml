@@ -33,6 +33,13 @@
 
 - include_tasks: tasks/push_ssh_key.yml
 
+- name: Create a directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/scripts"
+    state: directory
+    mode: "0755"
+
 - name: Execute Single Runs
   with_items: "{{ single_runs }}"
   include_tasks: single-run.yml
