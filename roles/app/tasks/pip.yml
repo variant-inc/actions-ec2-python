@@ -1,6 +1,13 @@
 ---
 - name: Install pip Requirements
   block:
+    - name: Install Packages
+      apt:
+        name: "python3-venv"
+        state: present
+        install_recommends: no
+        update_cache: true
+
     - name: Create virtual env
       shell: "python3 -m venv {{ python.env_name }}"
       become_user: "{{ instance_user }}"
