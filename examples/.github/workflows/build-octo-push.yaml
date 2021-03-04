@@ -25,7 +25,7 @@ jobs:
         id: lazy-setup
 
       - name: Lazy Action Ansible EC2
-        uses: variant-inc/lazy-ansible-ec2@feature/LAZY-55-create-cicd-pipeline-to-deploy-a
+        uses: variant-inc/actions-ansible-ec2@v1
         with:
           vars_file_path: .octopus/values.yaml
 
