@@ -40,14 +40,40 @@
     state: restarted
     daemon_reload: yes
 
-- name: Apply service monitor
+- name: Create /var/scripts directory if it does not exist
+  ansible.builtin.file:
+    path: "/var/scripts"
+    state: directory
+
+- name: "Create service entrypoint for top"
+  vars:
+    name: "{{ git_repo }}"
+  ansible.builtin.template:
+    src: top.sh
+    dest: "/var/scripts/top.sh"
+    mode: "0755"
+
+- name: "Service top"
+  ansible.builtin.copy:
+    src: top.service.conf
+    dest: "/etc/systemd/system/top.service"
+    backup: yes
+
+- name: "Enable service top"
+  ansible.builtin.systemd:
+    name: "top"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+
+- name: Create service-monitor.yml
   vars:
     namespace: "{{ git_repo }}"
     name: "{{ git_repo }}"
     external_ip: "{{ private_ip_address }}"
     ansible_become: no
-  community.kubernetes.k8s:
-    state: present
-    template: service-monitor.yaml
-    apply: yes
+  ansible.builtin.template:
+    src: service-monitor.yaml
+    dest: "/tmp/service-monitor.yaml"
+    mode: "0755"
   delegate_to: 127.0.0.1

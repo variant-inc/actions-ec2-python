@@ -12,6 +12,7 @@ install_packages:
   - cron
   - python3-dev
   - inotify-tools
+  - jq
 
 # conda_prereq_packages:
 #   - libgl1-mesa-glx
