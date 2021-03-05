@@ -1,9 +1,0 @@
-[MESSAGES CONTROL]
-disable=F401,
-        E1136,
-        E0239,
-        E0239,
-        E0611,
-        E0401,
-        R0903,
-        W0511
