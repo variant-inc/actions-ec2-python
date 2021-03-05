@@ -44,6 +44,7 @@ spec:
       port: metrics
   namespaceSelector:
     matchNames:
-      - default
+      - "{{ name }}"
   selector:
-    k8s-app: "{{ name }}"
+    matchLabels:
+      k8s-app: "{{ name }}"
