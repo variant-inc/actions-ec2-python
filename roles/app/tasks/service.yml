@@ -40,5 +40,5 @@
   ansible.builtin.systemd:
     name: "{{ item.name }}"
     enabled: yes
-    state: started
-  notify: Reload systemd
+    state: restarted
+    daemon_reload: yes

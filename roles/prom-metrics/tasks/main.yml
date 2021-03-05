@@ -37,8 +37,8 @@
   ansible.builtin.systemd:
     name: "push-gateway"
     enabled: yes
-    state: started
-  notify: Reload systemd
+    state: restarted
+    daemon_reload: yes
 
 - name: Apply service monitor
   vars:
