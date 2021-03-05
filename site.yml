@@ -3,7 +3,7 @@
   gather_facts: no
   vars_files:
     - group_vars/values.yaml
-  pre_tasks:
+  tasks:
     - include_tasks: tasks/push_ssh_key.yml
 
 - hosts: all
@@ -25,6 +25,9 @@
     - include_tasks: tasks/push_ssh_key.yml
     - import_role:
         name: td-agent
+    - include_tasks: tasks/push_ssh_key.yml
+    - import_role:
+        name: prom-metrics
     - include_tasks: tasks/push_ssh_key.yml
   roles:
     - app

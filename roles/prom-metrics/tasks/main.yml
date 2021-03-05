@@ -1,0 +1,41 @@
+---
+- name: Get Latest PushGateway Version
+  uri:
+    url: https://api.github.com/repos/prometheus/pushgateway/releases/latest
+  register: response
+
+- name: Output of version tag
+  debug:
+    msg: "{{ response.json.tag_name }}"
+
+- name: Download push-gateway
+  get_url:
+    url: "https://github.com/prometheus/pushgateway/releases/download/{{ response.json.tag_name }}/pushgateway-{{ response.json.tag_name[1:] }}.linux-amd64.tar.gz"
+    dest: /tmp/push-gateway.tar.gz
+    mode: "755"
+
+- name: Extract push-gateway.tar.gz
+  ansible.builtin.unarchive:
+    src: /tmp/push-gateway.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy a pushgateway into /usr/local/bin
+  ansible.builtin.copy:
+    src: "/tmp/pushgateway-{{ response.json.tag_name[1:] }}.linux-amd64/pushgateway"
+    dest: /usr/local/bin
+    remote_src: yes
+    mode: 0755
+
+- name: "Service push-gateway"
+  ansible.builtin.template:
+    src: push-gateway.conf
+    dest: "/etc/systemd/system/push-gateway.service"
+    backup: yes
+
+- name: "Enable service push-gateway"
+  ansible.builtin.systemd:
+    name: "push-gateway"
+    enabled: yes
+    state: started
+  notify: Reload systemd
