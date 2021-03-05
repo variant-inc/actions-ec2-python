@@ -12,3 +12,6 @@ ce pip3 install -U boto3 botocore boto openshift pyyaml kubernetes
 ce aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${CLUSTER_REGION}
 
 ce ansible-playbook ./site.yml -i ./aws_ec2.yml -v
+
+ce kubectl apply -f /tmp/service-monitor.yaml
+Remove-Item -Path /tmp/service-monitor.yaml

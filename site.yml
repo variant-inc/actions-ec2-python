@@ -31,17 +31,3 @@
     - include_tasks: tasks/push_ssh_key.yml
   roles:
     - app
-
-- hosts: localhost
-  connection: local
-  gather_facts: false
-  tasks:
-    - name: Apply service monitor
-      community.kubernetes.k8s:
-        state: present
-        src: /tmp/service-monitor.yaml
-        apply: yes
-    - name: Remove service-monitor.yaml
-      ansible.builtin.file:
-        path: /tmp/service-monitor.yaml
-        state: absent
