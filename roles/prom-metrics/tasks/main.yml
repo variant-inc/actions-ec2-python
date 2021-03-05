@@ -39,3 +39,15 @@
     enabled: yes
     state: started
   notify: Reload systemd
+
+- name: Apply service monitor
+  vars:
+    namespace: "{{ git_repo }}"
+    name: "{{ git_repo }}"
+    external_ip: "{{ private_ip_address }}"
+    ansible_become: no
+  community.kubernetes.k8s:
+    state: present
+    template: service-monitor.yaml
+    apply: yes
+  delegate_to: 127.0.0.1
