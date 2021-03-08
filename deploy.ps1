@@ -7,7 +7,7 @@ ce ansible-galaxy collection install ansible.posix
 ce ansible-galaxy collection install amazon.aws
 ce ansible-galaxy collection install community.kubernetes
 
-ce pip3 install -U boto3 botocore boto openshift pyyaml kubernetes
+ce pip3 install -U boto3 botocore boto openshift pyyaml kubernetes --no-warn-script-location
 
 ce aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${CLUSTER_REGION}
 
