@@ -62,12 +62,12 @@ These are run as a service
 
 These allow you to take backups of certain folders to S3 bucket
 
-| parameter     | description                                | example     |
-| ------------- | ------------------------------------------ | ----------- |
-| name          | A friendly name. No spaces                 | HelloWorld  |
-| bucket_name   | S3 bucket name                             | hello-world |
-| bucket_folder | Folder in the S3 bucket                    | dir         |
-| dir           | Location to local dir relative to home dir | data        |
+| parameter     | description                               | example     |
+| ------------- | ----------------------------------------- | ----------- |
+| name          | A friendly name. No spaces                | HelloWorld  |
+| bucket_name   | S3 bucket name                            | hello-world |
+| bucket_folder | Folder in the S3 bucket                   | dir         |
+| dir           | Location to local dir relative to app dir | data        |
 
 ### Misc Vars
 
