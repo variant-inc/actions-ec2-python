@@ -1,8 +1,11 @@
-# Instructions to Test this action
+# Instructions to Test this action <!-- omit in toc -->
 
 Do all tests in `devops` account
 
-## Instance Creation
+- [1. Instance Creation](#1-instance-creation)
+- [2. Running Tests](#2-running-tests)
+
+## 1. Instance Creation
 
 Create an ec2 instance using [lazy-terraform](https://github.com/variant-inc/lazy-terraform/tree/master/ec2)
 
@@ -26,23 +29,25 @@ Things to note while creating it:
     }
     ```
 
-2. Copy `values.yaml` from [tests/repo/.octopus/values.yaml](repo/.octopus/values.yaml) and add to [group_vars/](../group_vars/). Make any modifications that you need
-3. Get new sso credentials for ops profile. If you do not have ops profile do
+## 2. Running Tests
+
+1. Copy `values.yaml` from [tests/repo/.octopus/values.yaml](repo/.octopus/values.yaml) and add to [group_vars/](../group_vars/). Make any modifications that you need
+2. Get new sso credentials for ops profile. If you do not have ops profile do
 
   `aws configure sso` and select Variant-ops and give profile name as ops
 
   `aws sso login --profile ops`
-4. Modify [aws_ec2.yml](../aws_ec2.yml) and update the `filters:instance-id` with `instance-id` that you got from step 1.
-5. Add a file `all` in [group_vars/](../group_vars/) folder. Contents of the file is
+3. Modify [aws_ec2.yml](../aws_ec2.yml) and update the `filters:instance-id` with `instance-id` that you got from step 1.
+4. Add a file `all` in [group_vars/](../group_vars/) folder. Contents of the file is
 
   ```yaml
   git:
-    url: ## commit url
-    commit_sha: ## commit sha
-    secret_token: ## Personal Access Token
-    username: ## Name of the github User
+  url: ## commit url
+  commit_sha: ## commit sha
+  secret_token: ## Personal Access Token
+  username: ## Name of the github User
 
   instance_user: ubuntu
-    ```
+  ```
 
-6. Run [tests/deploy.ps1](deploy.ps1)
+5. Run [tests/deploy.ps1](deploy.ps1)
