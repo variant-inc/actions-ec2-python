@@ -11,7 +11,7 @@ Create an ec2 instance using [lazy-terraform](https://github.com/variant-inc/laz
 
 Things to note while creating it:
 
-1. Add security group rules to your current IP or open-vpn security group. If you use security group, you should be connected to `openvpn` when testing the action. Use `vpn.ops-drivevariant.com` (devops) connection
+1. Add security group rules open-vpn security group. Use `vpn.ops-drivevariant.com` (devops) connection
 
     Example:
 
@@ -28,6 +28,8 @@ Things to note while creating it:
       }
     }
     ```
+
+2. The instance has to have access to a certain bucket in S3.
 
 ## 2. Running Tests
 
