@@ -35,11 +35,7 @@ Things to note while creating it:
 ## 2. Running Tests
 
 1. Copy `values.yaml` from [tests/repo/.octopus/values.yaml](repo/.octopus/values.yaml) and add to [group_vars/](../group_vars/). Make any modifications that you need
-2. Get new sso credentials for ops profile. If you do not have ops profile do
-
-  `aws configure sso` and select Variant-ops and give profile name as ops
-
-  `aws sso login --profile ops`
+2. Set AWS credentials as env variables.
 3. Modify [aws_ec2.yml](../aws_ec2.yml) and update the `filters:instance-id` with `instance-id` that you got from step 1.
 4. Add a file `all` in [group_vars/](../group_vars/) folder. Contents of the file is
 

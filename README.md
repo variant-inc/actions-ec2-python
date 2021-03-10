@@ -14,6 +14,7 @@ This playbook currently supports only `python` deployment. Others can be deploye
   - [1.4. Misc Vars](#14-misc-vars)
 - [2. Example](#2-example)
 - [3. Testing](#3-testing)
+- [Notes](#notes)
 
 ## 1. Instructions
 
@@ -132,3 +133,7 @@ More examples can be found at [examples](examples) folder
 ## 3. Testing
 
 To test the action, refer [tests/Readme.md](tests/README.md)
+
+## Notes
+
+- Supports only Ubuntu
