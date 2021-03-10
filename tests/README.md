@@ -4,6 +4,7 @@ Do all tests in `devops` account
 
 - [1. Instance Creation](#1-instance-creation)
 - [2. Running Tests](#2-running-tests)
+- [3. Testing using a custom Repo](#3-testing-using-a-custom-repo)
 
 ## 1. Instance Creation
 
@@ -53,3 +54,14 @@ Things to note while creating it:
   ```
 
 5. Run [tests/deploy.ps1](deploy.ps1)
+6. Cleanup Instance and S3 buckets that were created.
+
+## 3. Testing using a custom Repo
+
+1. Create an Octopus Project
+2. Create a Instance as per step 2 & add the instance ID to the Variables in Octopus Project
+3. Create a GitHub repository and add the files in [tests/repo](repo/) folder inside the newly created git repo.
+4. Change the OCTOPUS_PROJECT_NAME is [.github/workflows/build-octo-push.yaml](repo/.github/workflows/build-octo-push.yaml)
+5. Create a commit and push
+6. Check if the deployment is successful
+7. Cleanup Instance and other created resources like S3.

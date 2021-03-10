@@ -1,0 +1,43 @@
+---
+name: Build & Push to Octopus
+
+on:
+  push:
+
+env:
+  OCTOPUS_PROJECT_NAME: --some--project--
+  OCTOPUS_SPACE_NAME: Default
+  MASTER_BRANCH: main
+
+jobs:
+  build:
+    name: Build Image and Push to Octo
+    runs-on: [eks]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Lazy Action Setup
+        uses: variant-inc/lazy-action-setup@v0.1.0
+        id: lazy-setup
+
+      - name: Lazy Action Ansible EC2
+        uses: variant-inc/lazy-ansible-ec2@v1
+        with:
+          vars_file_path: .octopus/values.yaml
+
+      - name: Lazy Action Octopus
+        uses: variant-inc/lazy-action-octopus@v0.1.0
+        with:
+          default_branch: ${{ env.MASTER_BRANCH }}
+          deploy_scripts_path: deploy
+          project_name: ${{ env.OCTOPUS_PROJECT_NAME }}
+          version: ${{ steps.lazy-setup.outputs.image_version }}
+          space_name: ${{ env.OCTOPUS_SPACE_NAME }}
+
+      - name: Cleanup
+        run: |
+          rm -rf ./deploy
