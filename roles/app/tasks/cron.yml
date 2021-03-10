@@ -1,0 +1,44 @@
+---
+- name: Create a directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/cron"
+    state: directory
+    mode: '0755'
+
+- name: "Create script for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    entrypoint: "{{ item.entrypoint }}"
+  ansible.builtin.template:
+    src: run.sh
+    dest: "/home/{{ instance_user }}/scripts/{{ item.name }}-cron.sh"
+    mode: "0755"
+
+- name: "Create cron entrypoint for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    type: cron
+    entrypoint: "/home/{{ instance_user }}/scripts/{{ item.name }}-cron.sh"
+    name: "{{ item.name }}"
+  ansible.builtin.template:
+    src: entrypoint.sh
+    dest: "/home/{{ instance_user }}/cron/{{ item.name }}.sh"
+    mode: '0755'
+
+- name: "Cron for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    minute: "{{ item.cron.split(' ')[0] }}"
+    hour: "{{ item.cron.split(' ')[1] }}"
+    day: "{{ item.cron.split(' ')[2] }}"
+    month: "{{ item.cron.split(' ')[3] }}"
+    weekday: "{{ item.cron.split(' ')[4] }}"
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    minute: "{{ minute }}"
+    hour: "{{ hour }}"
+    day: "{{ day }}"
+    month: "{{ month }}"
+    job: "/home/{{ instance_user }}/cron/{{ item.name }}.sh"
+    disabled: "{{ item.disabled }}"

@@ -1,0 +1,44 @@
+---
+- name: Create service directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/service"
+    state: directory
+    mode: "0755"
+
+- name: "Create script for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    entrypoint: "{{ item.entrypoint }}"
+  ansible.builtin.template:
+    src: run.sh
+    dest: "/home/{{ instance_user }}/scripts/{{ item.name }}-service.sh"
+    mode: "0755"
+
+- name: "Create service entrypoint for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    type: service
+    name: "{{ item.name }}"
+    entrypoint: "/home/{{ instance_user }}/scripts/{{ item.name }}-service.sh"
+  ansible.builtin.template:
+    src: entrypoint.sh
+    dest: "/home/{{ instance_user }}/service/{{ item.name }}.sh"
+    mode: "0755"
+
+- name: "Service {{ item.name }}"
+  vars:
+    name: "{{ item.name }}"
+    user: "{{ instance_user }}"
+    entrypoint: "/home/{{ instance_user }}/service/{{ item.name }}.sh"
+  ansible.builtin.template:
+    src: app.service.conf
+    dest: "/etc/systemd/system/{{ item.name }}.service"
+    backup: yes
+
+- name: "Enable service {{ item.name }}"
+  ansible.builtin.systemd:
+    name: "{{ item.name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes

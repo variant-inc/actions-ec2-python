@@ -1,0 +1,25 @@
+---
+- name: Install ca-certificates
+  apt:
+    name: ca-certificates
+    state: latest
+    install_recommends: no
+    update_cache: true
+
+- name: Install Packages
+  apt:
+    name: "{{ install_packages }}"
+    state: present
+    install_recommends: no
+    update_cache: true
+
+- name: Install conda
+  include_tasks: conda.yml
+  when: python.manager == "conda"
+
+- name: Install awscli
+  include_tasks: awscli.yml
+
+- name: Pip Install Packages
+  pip:
+    name: "{{ pip_packages }}"

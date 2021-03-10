@@ -1,0 +1,50 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: "{{ namespace }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ name }}"
+  namespace: "{{ namespace }}"
+  labels:
+    k8s-app: "{{ name }}"
+spec:
+  clusterIP: None
+  ports:
+    - name: metrics
+      port: 9091
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: "{{ name }}"
+  namespace: "{{ namespace }}"
+  labels:
+    k8s-app: "{{ name }}"
+subsets:
+  - addresses:
+      - ip: "{{ external_ip }}"
+    ports:
+      - port: 9091
+        name: metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "{{ name }}"
+  namespace: "{{ namespace }}"
+  labels:
+    k8s-app: "{{ name }}"
+spec:
+  endpoints:
+    - interval: 30s
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - "{{ name }}"
+  selector:
+    matchLabels:
+      k8s-app: "{{ name }}"

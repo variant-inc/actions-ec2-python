@@ -1,0 +1,19 @@
+# Created by https://www.toptal.com/developers/gitignore/api/vscode,ssh
+# Edit at https://www.toptal.com/developers/gitignore?templates=vscode,ssh
+
+### SSH ###
+**/.ssh/id_*
+**/.ssh/*_id_*
+**/.ssh/known_hosts
+
+### vscode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# End of https://www.toptal.com/developers/gitignore/api/vscode,ssh
+
+all

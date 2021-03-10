@@ -1,0 +1,32 @@
+install_packages:
+  - git
+  - bash
+  - unzip
+  - zip
+  - gcc
+  - g++
+  - make
+  - python3
+  - python3-pip
+  - procps
+  - cron
+  - python3-dev
+  - inotify-tools
+  - jq
+
+# conda_prereq_packages:
+#   - libgl1-mesa-glx
+#   - libegl1-mesa
+#   - libxrandr2
+#   - libxrandr2
+#   - libxss1
+#   - libxcursor1
+#   - libxcomposite1
+#   - libasound2
+#   - libxi6
+#   - libxtst6
+
+pip_packages:
+  - virtualenv
+  - boto3
+  - botocore

@@ -1,0 +1,22 @@
+---
+name: Linter
+
+on:
+  push:
+    branches-ignore: [master]
+
+jobs:
+  lint:
+    name: Lint Code Base
+    runs-on: [eks]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Lint Code Base
+        uses: github/super-linter@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_EXCLUDE: ".*entrypoint|run.*"
+          VALIDATE_KUBERNETES_KUBEVAL: false

@@ -1,0 +1,32 @@
+clone_dir: actions
+
+instance_user: ubuntu
+
+python:
+  manager: pip
+  env_name: env
+
+single_runs:
+  - name: single-date
+    entrypoint: |
+      mkdir -p ./data
+      echo $(date)
+
+cron_entries:
+  - name: cron-date
+    entrypoint: |
+      echo $(date)
+      echo $(date) >> ./data/date.log
+    cron: "5 * * * *"
+    disabled: no
+
+service_entries:
+  - name: service-date
+    entrypoint: |
+      echo $(date)
+
+backups:
+  - name: data
+    bucket_name: actions-ansible-ec2
+    bucket_folder: "data"
+    dir: "./data"

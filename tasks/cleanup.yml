@@ -1,0 +1,12 @@
+---
+- name: Kill running single jobs
+  with_items: "{{ single_runs }}"
+  shell: "kill -9 -$(ps aejxf | grep '{{ item.name }}.sh' | grep -v grep | awk '{print $3}' | head)"
+  ignore_errors: True
+  when: single_runs is defined
+
+- name: Kill running cron jobs
+  with_items: "{{ cron_entries }}"
+  shell: "kill -9 -$(ps aejxf | grep '{{ item.name }}.sh' | grep -v grep | awk '{print $3}' | head)"
+  ignore_errors: True
+  when: cron_entries is defined

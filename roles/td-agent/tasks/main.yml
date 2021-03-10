@@ -1,0 +1,58 @@
+---
+- name: "Create Log Group"
+  community.aws.cloudwatchlogs_log_group:
+    state: present
+    log_group_name: "{{ git_repo }}"
+    tags: { "Name": "{{ git_repo }}", "purpose" : "data-science" }
+    region: "{{ placement.region }}"
+
+- name: "Set sysctl params"
+  ansible.posix.sysctl:
+    name: "{{ item.param }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items: "{{ kernel }}"
+
+- name: Increase Max of File Descriptors
+  ansible.builtin.lineinfile:
+    dest: /etc/security/limits.conf
+    state: present
+    regexp: "{{item.regexp}}"
+    line: "{{ item.line }}"
+    backrefs: no
+    backup: yes
+  with_items: "{{ limits_configs }}"
+
+- name: Download td-agent
+  get_url:
+    url: https://toolbelt.treasuredata.com/sh/install-ubuntu-focal-td-agent4.sh
+    dest: /tmp/td-agent.sh
+    mode: "755"
+
+- name: Execute the td-agent.sh
+  shell: /tmp/td-agent.sh
+  ignore_errors: True
+
+- name: Remove the td-agent.sh
+  file:
+    path: /tmp/td-agent.sh
+    state: absent
+
+- name: Check plugins
+  shell: "td-agent-gem list --local {{ item }}"
+  with_items: "{{ td_agent.plugins }}"
+  changed_when: False
+  failed_when: False
+  register: plugin_status
+
+- name: Install plugins
+  shell: "td-agent-gem install {{ item.item }}"
+  with_items: "{{ plugin_status.results }}"
+  when: plugin_status.results is defined and item.stdout[0] is undefined
+
+- name: td-agent template copy
+  ansible.builtin.template:
+    src: td-agent.conf
+    dest: /etc/td-agent/td-agent.conf
+    backup: yes
+  notify: Restart td-agent

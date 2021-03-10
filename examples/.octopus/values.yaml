@@ -1,0 +1,48 @@
+clone_dir: usxopt
+
+instance_user: ubuntu
+
+python:
+  manager: conda
+  env_name: usxopt
+
+single_runs:
+  - name: CreateDirIfNotExists
+    entrypoint: mkdir -p ../data
+  - name: RejectedLoads
+    entrypoint: |
+      if [ ! -f RejectedLoads.opt ]; then
+        BUCKET="{{ backups[0].bucket_name }}"
+        BUCKET_FOLDER="{{ backups[0].bucket_folder }}"
+        OBJECT="$(aws s3 ls s3://$BUCKET/$BUCKET_FOLDER --recursive | sort | tail -n 1 | awk '{print $4}')"
+        aws s3 cp s3://$BUCKET/$OBJECT ../data/backup.tar.gz
+
+        tar -xvf ../data/backup.tar.gz -C ../data
+        mv ../data/rundir/RejectedLoads.opt RejectedLoads.opt
+
+        rm -rf ../data/rundir || true
+      fi
+      cd ../
+      python usxopt/appendRejectedLoads.py >> usxopt/appendRejectedLoads.log 2>&1
+  - name: Optimizer
+    entrypoint: ./run.sh >> usxopt.log 2>&1
+    background: true
+
+cron_entries:
+  - name: RejectedLoads
+    entrypoint: |
+      cd ../
+      python usxopt/appendRejectedLoads.py >> usxopt/appendRejectedLoads.log 2>&1
+    cron: "*/5 * * * *"
+    disabled: no
+  - name: Optimizer
+    entrypoint: run.sh >> usxopt.log 2>&1
+    cron: "0 * * * *"
+    disabled: no
+
+backups:
+  - name: data
+    bucket_name: usxopt
+    bucket_folder: "data"
+    # dir relative to home dir. For example: if dir is hello, the absolute dir is /home/ubuntu/hello
+    dir: "../data"

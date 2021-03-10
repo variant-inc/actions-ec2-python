@@ -1,0 +1,36 @@
+kernel:
+  - param: "net.core.somaxconn"
+    value: 1024
+  - param: "net.core.netdev_max_backlog"
+    value: 5000
+  - param: "net.core.rmem_max"
+    value: 16777216
+  - param: "net.core.wmem_max"
+    value: 16777216
+  - param: "net.ipv4.tcp_wmem"
+    value: "4096 12582912 16777216"
+  - param: "net.ipv4.tcp_rmem"
+    value: "4096 12582912 16777216"
+  - param: "net.ipv4.tcp_max_syn_backlog"
+    value: 8096
+  - param: "net.ipv4.tcp_slow_start_after_idle"
+    value: 0
+  - param: "net.ipv4.tcp_tw_reuse"
+    value: 1
+  - param: "net.ipv4.ip_local_port_range"
+    value: "10240 65535"
+
+limits_configs:
+  - regexp: root soft nofile 65536
+    line: root soft nofile 65536
+  - regexp: root hard nofile 65536
+    line: root hard nofile 65536
+  - regexp: '\* soft nofile 65536'
+    line: "* soft nofile 65536"
+  - regexp: '\* hard nofile 65536'
+    line: "* hard nofile 65536"
+
+td_agent:
+  plugins:
+    - fluent-plugin-grok-parser
+    - fluent-plugin-cloudwatch-logs

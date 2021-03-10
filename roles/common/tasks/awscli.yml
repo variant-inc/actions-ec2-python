@@ -1,0 +1,42 @@
+---
+- name: Check is awscli installed
+  shell: which aws
+  register: is_aws_exist
+  become_user: "{{ instance_user }}"
+  ignore_errors: yes
+
+- name: Output of is_aws_exist
+  debug:
+    msg: "{{ is_aws_exist }}"
+
+- name: Install awscli
+  when: is_aws_exist.stdout[0] is undefined
+  block:
+    - include_tasks: tasks/push_ssh_key.yml
+
+    - name: Download awscli zip
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+        mode: 0550
+
+    - include_tasks: tasks/push_ssh_key.yml
+
+    - name: Unarchive a file that is already on the remote machine
+      ansible.builtin.unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Run the installer
+      shell: /tmp/aws/install
+
+    - include_tasks: tasks/push_ssh_key.yml
+
+    - name: Remove the installer
+      with_items:
+        - /tmp/awscliv2.zip
+        - /tmp/aws
+      file:
+        state: absent
+        path: "{{ item }}"

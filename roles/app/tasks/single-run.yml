@@ -1,0 +1,39 @@
+---
+- include_tasks: tasks/push_ssh_key.yml
+- name: Create a directory if it does not exist
+  become_user: "{{ instance_user }}"
+  ansible.builtin.file:
+    path: "/home/{{ instance_user }}/runs"
+    state: directory
+    mode: "0755"
+
+- name: "Create script for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    entrypoint: "{{ item.entrypoint }}"
+  ansible.builtin.template:
+    src: run.sh
+    dest: "/home/{{ instance_user }}/scripts/{{ item.name }}-single.sh"
+    mode: "0755"
+
+- name: "Create single entrypoint for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  vars:
+    type: runs
+    entrypoint: "/home/{{ instance_user }}/scripts/{{ item.name }}-single.sh"
+    name: "{{ item.name }}"
+  ansible.builtin.template:
+    src: entrypoint.sh
+    dest: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
+    mode: "0755"
+
+- name: "Single Run for {{ item.name }}"
+  become_user: "{{ instance_user }}"
+  shell: "/home/{{ instance_user }}/runs/{{ item.name }}.sh"
+  when: item.background|default(false)|bool == false
+
+- name: "Single Run for {{ item.name }} in Background"
+  become_user: "{{ instance_user }}"
+  shell: "nohup /home/{{ instance_user }}/runs/{{ item.name }}.sh >/dev/null 2>&1 &"
+  when: item.background|default(false)|bool == true
+- include_tasks: tasks/push_ssh_key.yml
