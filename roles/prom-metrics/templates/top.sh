@@ -1,10 +1,11 @@
 #!/bin/bash
 
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 # shellcheck disable=SC2034
-instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id -m 1 | base64)
+instance_id=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/instance-id -m 1 | base64)
 instance_id=${instance_id:-=}
 # shellcheck disable=SC2034
-private_host=$(curl -s http://169.254.169.254/latest/meta-data/local-hostname -m 1 | base64)
+private_host=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/local-hostname -m 1 | base64)
 private_host=${private_host:-=}
 HOST="http://localhost:9091/metrics/job/top/instance@base64/$instance_id/host@base64/$private_host"
 
